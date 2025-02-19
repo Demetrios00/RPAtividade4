@@ -1,0 +1,36 @@
+# Problemas 
+
+- Lógica condicional para calcular desconto (várias condicionais para escolher a estratégia de desconto)
+- Criação de objetos (pedidos) por meio de condicionais
+- Notificações feitas “in-line”, sem desacoplamento da lógica de envio
+
+Se olharmos o código mainOriginal.py, conseguimos identificar que o método process_order() acumula responsabilidades: 
+    - calcula descontos, 
+    - cria o pedido correto
+    - envia notificações. 
+    
+Isso acaba dificultando o entendimento, a manutenção e a extensão do código.
+
+
+# Refatoração Aplicando os Padrões #
+
+Para correção, utilizo 3 tipos de padrões focando na resolução desses problemas.
+
+    - Strategy Pattern pra encapsular o cálculo do desconto.
+    - Factory Pattern pra centralizar a criação dos pedidos.
+    - Observer Pattern pra desacoplar a lógica de notificação do processamento do pedido.
+
+
+# O Que Mudou? #
+
+Ao olharmos o código mainRefatorado.py podemos identificar que evoluimos a forma de fazer o 'cálculo do desconto'(Strategy Pattern) criando abstração em classes que implementam a interface DiscountStrategy. Agora, para um cliente "premium", a função PremiumDiscount() é iniciada. 
+Para outros cenários, poderíamos utilizar RegularDiscount() ou NoDiscount(). 
+    * Benefício: A lógica de desconto fica encapsulada e é facilmente extensível.
+
+Já quando olhamos para criação de pedidos(Factory Pattern), a classe OrderFactory centraliza essa criação com base no tipo. 
+Com isso, o código cliente não precisa lidar com condicionais para instanciar OnlineOrder, InStoreOrder ou Order.
+    * Benefício: Reduz o acoplamento e facilita a adição de novos tipos de pedido.
+
+E pra finalizar, A lógica de notificações(Observer Pattern) movi para uma estrutura desacoplada, onde os assistentes (notificadores) se registram em um objeto do tipo NotificationSubject e são notificados quando o pedido é processado.
+    * Benefício: Torna o sistema flexível para adicionar, remover ou modificar notificadores sem alterar o fluxo principal do processamento do pedido.    
+
